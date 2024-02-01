@@ -21,6 +21,15 @@ namespace StockApi.Controllers
             
             return Ok(result);
         }
-        
+        [HttpGet("{symbol}/history")]
+        public async Task<IActionResult> GetHistoricalStock(string symbol)
+        {
+            var HistoricalStock = await unitOfWork.StockRepository.GetAsync(symbol);
+            if(HistoricalStock == null) 
+            {
+                return Ok($"There is Not Stock by this Symbol{symbol}");
+            }
+            return Ok(HistoricalStock);
+        }
     }
 }
