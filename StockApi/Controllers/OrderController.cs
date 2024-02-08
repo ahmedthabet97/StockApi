@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StockApi.DTOs.Order;
 using StockApi.Enums;
 using StockApi.Models;
 using StockApi.Services;
-using StockApi.ViewModels;
 using System.Runtime.CompilerServices;
 
 namespace StockApi.Controllers
@@ -26,7 +26,7 @@ namespace StockApi.Controllers
             return Ok(orders);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateOrder(OrderViewModel model)
+        public async Task<IActionResult> CreateOrder(OrderDto model)
         {
             if(!ModelState.IsValid)
             {

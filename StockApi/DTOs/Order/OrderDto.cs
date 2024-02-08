@@ -1,9 +1,6 @@
-﻿using StockApi.Enums;
-using StockApi.Models;
-
-namespace StockApi.ViewModels
+﻿namespace StockApi.DTOs.Order
 {
-    public class OrderViewModel
+    public class OrderDto
     {
         public List<string> StockSymbol { get; set; }
         public OrderType OrderType { get; set; }

@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 
 namespace StockApi.Models;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<StockUser>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -12,11 +13,10 @@ public class ApplicationDbContext : DbContext
     public DbSet<Stock> Stocks { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .Entity<Order>()
-            .HasMany<Stock>()
-            .WithOne()
-            .HasForeignKey(o => o.OrderId);
+        modelBuilder.Entity<Stock>()
+            .HasMany(o => o.Orders)
+            .WithMany(o => o.Stocks)
+            .UsingEntity(e=>e.ToTable("StockOrders"));
         base.OnModelCreating(modelBuilder);
     }
 }
