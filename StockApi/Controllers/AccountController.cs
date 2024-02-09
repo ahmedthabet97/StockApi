@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Writers;
 using StockApi.DTOs.Account;
 using StockApi.Models;
 using StockApi.Services;
+using System.Security.Claims;
 
 namespace StockApi.Controllers
 {
@@ -58,6 +59,18 @@ namespace StockApi.Controllers
             if(!result.Succeeded) { return BadRequest(result.Errors); }
             return Ok("Your Account has been Created Successfully !");
         }
+        [Authorize]
+        [HttpGet("RefreshUserToken")]
+        public async Task<ActionResult<UserDto>> RefreshUserToken() 
+        {
+            try {
+                var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimTypes.Email).Value);
+                return CreateUserDto(user);
+            }
+            catch (Exception ex) { return BadRequest(ex.Message); }
+            
+        }
+        
         #region Private Helper Methods
         private UserDto CreateUserDto(StockUser user) 
         {
