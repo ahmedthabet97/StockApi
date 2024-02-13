@@ -57,22 +57,43 @@ builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //Add Service agular and SignalR
-builder.Services.AddCors(
-    option=>option.AddPolicy("AllowAllHeaders",
-    builder =>
-    {
-        builder.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-    }));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularDev",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+
+}
+);
 builder.Services.AddSignalR(options =>
 {
     options.EnableDetailedErrors = true;
 });
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = actionContext =>
+    {
+        var errors = actionContext.ModelState
+        .Where(x => x.Value.Errors.Count > 0)
+        .SelectMany(x => x.Value.Errors)
+        .Select(x => x.ErrorMessage).ToArray();
+
+        var toReturn = new
+        {
+            Errors = errors
+        };
+
+        return new BadRequestObjectResult(toReturn);
+    };
+});
 
 builder.Services.AddControllers();
 var app = builder.Build();
-
+app.UseCors("AllowAngularDev");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -85,7 +106,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseRouting();
 //added
-app.UseCors("AllowAllHeaders");
 app.MapControllers();
 app.MapHub<StockHub>("/stockHub");
 app.Run();

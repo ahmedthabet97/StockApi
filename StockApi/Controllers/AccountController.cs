@@ -56,7 +56,7 @@ namespace StockApi.Controllers
             };
             var result = await _userManager.CreateAsync(user,model.Password);
             if(!result.Succeeded) { return BadRequest(result.Errors); }
-            return Ok("Your Account has been Created Successfully !");
+            return Ok(new JsonResult(new { title = "Account Created", message = "Your account has been created, please confrim your email address" }));
         }
         #region Private Helper Methods
         private UserDto CreateUserDto(StockUser user) 
