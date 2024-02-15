@@ -7,6 +7,7 @@ namespace StockApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StockController : ControllerBase
     {
         private readonly IUnitOfWork unitOfWork;
@@ -14,12 +15,15 @@ namespace StockApi.Controllers
         {
             this.unitOfWork = unitOfWork;
         }
-        [HttpGet]
+        [HttpGet("GetAllStocks")]
         public async Task<IActionResult> GetAllStockAsync() 
         {
-         var result= await unitOfWork.StockRepository.GetAllAsync();
-            
-            return Ok(result);
+           var result= await unitOfWork.StockRepository.GetAllAsync();
+            string json = JsonConvert.SerializeObject(result, Formatting.Indented, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            });
+            return Ok(new JsonResult(json));
         }
         [HttpGet("{symbol}/history")]
         public async Task<IActionResult> GetHistoricalStock(string symbol)
