@@ -4,9 +4,9 @@ namespace StockApi;
 
 public class StockHub:Hub
 {
-    public async Task CrudData(string message)
+    public async Task CrudData(object data)
     {
 
-        await Clients.All.SendAsync("RecieveMessage","Hello World");
+        await Clients.All.SendAsync("ReceiveData", data);
     }
 }

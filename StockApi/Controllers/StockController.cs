@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using StockApi.Models;
 using StockApi.Services;
 
@@ -11,9 +12,11 @@ namespace StockApi.Controllers
     public class StockController : ControllerBase
     {
         private readonly IUnitOfWork unitOfWork;
-        public StockController(IUnitOfWork unitOfWork)
+        private readonly IHubContext<StockHub> _hubContext;
+        public StockController(IUnitOfWork unitOfWork, IHubContext<StockHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
+            _hubContext = hubContext;
         }
         [HttpGet("GetAllStocks")]
         public async Task<IActionResult> GetAllStockAsync() 

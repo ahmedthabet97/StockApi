@@ -90,7 +90,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
         return new BadRequestObjectResult(toReturn);
     };
 });
-
 builder.Services.AddControllers();
 var app = builder.Build();
 app.UseCors("AllowAngularDev");
